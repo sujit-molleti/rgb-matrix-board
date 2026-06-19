@@ -4,7 +4,7 @@
 
 #define MATRIX_PIN 2
 #define ROWS 32
-#define COLS 64
+#define COLS 128
 #define NUM_PIXELS (ROWS * COLS)
 
 Adafruit_NeoPixel matrix(NUM_PIXELS, MATRIX_PIN, NEO_GRB + NEO_KHZ800);

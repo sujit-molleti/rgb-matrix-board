@@ -17,7 +17,7 @@
       "left": 260,
       "attrs": {
         "rows": "32",
-        "cols": "64",
+        "cols": "128",
         "layout": "serpentine",
         "pixelShape": "circle",
         "brightness": "1"
