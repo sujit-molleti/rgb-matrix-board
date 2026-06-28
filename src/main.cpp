@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 
 #define MATRIX_PIN 2
-#define ROWS 32
+#define ROWS 64
 #define COLS 128
 #define NUM_PIXELS (ROWS * COLS)
 
