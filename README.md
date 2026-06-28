@@ -19,7 +19,6 @@ This repository is an early prototype. It currently supports:
 - ESP32 DevKit target through PlatformIO.
 - 64 row x 128 column Wokwi LED matrix simulation.
 - Serpentine pixel mapping.
-- Basic 3x5 pixel glyph rendering for scoreboard text.
 - JSON parsing with ArduinoJson.
 - A hardcoded sample football scoreboard.
 
@@ -42,7 +41,7 @@ The firmware currently defines:
 #define COLS 128
 ```
 
-The target architecture is being designed around the 128x64 display layout now reflected in the firmware and Wokwi diagram.
+The target architecture is being designed around the 128x64 display layout now reflected in the firmware and Wokwi diagram. The goals is to take 4 64 x 32(W x L) and create a 2 x 2 grid, creating a large 128 x 64 panel.
 
 ## Project Structure
 
