@@ -1,16 +1,8 @@
 # RGB Sports Matrix
 
-RGB Sports Matrix is an ESP32-powered C++ project for rendering compact sports information on an RGB LED matrix. The current prototype renders a sample football scoreboard from JSON onto a 64x128 serpentine LED matrix using PlatformIO, Arduino, Adafruit NeoPixel, and ArduinoJson.
+RGB Sports Matrix is an ESP32-powered C++ project for rendering compact sports information on an RGB LED matrix. Using PlatformIO, Arduino, Adafruit NeoPixel, and ArduinoJson to display information.
 
 The longer-term goal is to build a modular rendering pipeline capable of displaying live sports content from multiple leagues and providers while staying independent from any single sports API.
-
-The architecture emphasizes:
-
-- Separation of concerns.
-- Extensibility.
-- Testability.
-- Clear domain modeling.
-- API-independent rendering.
 
 ## Current Status
 
@@ -25,6 +17,8 @@ This repository is an early prototype. It currently supports:
 The project is being shaped toward a general sports display system that can render live events, upcoming games, completed results, secondary score tiles, standings, news alerts, and ticker content.
 
 ## Hardware Model
+
+**To add more information here as software starts to finalize on simulator...**
 
 The checked-in Wokwi circuit currently uses:
 
@@ -110,6 +104,14 @@ Sports APIs
 ```
 
 Each layer owns a single responsibility.
+
+The architecture emphasizes:
+
+- Separation of concerns.
+- Extensibility.
+- Testability.
+- Clear domain modeling.
+- API-independent rendering.
 
 ## Design Principles
 
