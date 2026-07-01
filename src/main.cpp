@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 #include <ArduinoJson.h>
-#include "layout.h"
+#include "layout/layout.h"
 
 #define MATRIX_PIN 2
 #define ROWS 64
@@ -183,9 +183,9 @@ void setup() {
   matrix.begin();
   matrix.setBrightness(200);
 
-  VirtualRgbBoard board = createDefaultVirtualRgbBoard();
+  LayoutRenderer layoutRenderer(COLS, ROWS);
   LayoutValidator validator(COLS, ROWS);
-  ValidationResult validation = board.validate(validator);
+  ValidationResult validation = layoutRenderer.validate(validator);
   printValidationResult(validation);
 
   Serial.println("Rendering fake scoreboard JSON...");

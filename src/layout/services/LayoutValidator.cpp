@@ -1,75 +1,18 @@
-#include "layout.h"
+#include "LayoutValidator.h"
+
+#include "../internal/layout_private.h"
 
 #include <stdint.h>
 
 namespace {
-const size_t MaxValidationErrors = 32;
-
 bool sameId(const std::string& left, const std::string& right) {
   return left == right;
 }
 
-bool hasErrorCapacity(const ValidationResult& result) {
-  return result.errors.size() < MaxValidationErrors;
-}
-}
-
-void ValidationResult::addError(const ValidationError& error) {
-  isValid = false;
-
-  if (hasErrorCapacity(*this)) {
-    errors.push_back(error);
-  }
-}
-
-ValidationError::ValidationError(
-  ValidationErrorType type,
-  const std::string& message,
-  const std::string& layoutId,
-  const std::string& displayId,
-  int x,
-  int y
-) : type(type),
-    message(message),
-    layoutId(layoutId),
-    displayId(displayId),
-    x(x),
-    y(y) {
-}
-
-LayoutValidator::LayoutValidator(int expectedWidth, int expectedHeight)
-  : expectedWidth(expectedWidth),
-    expectedHeight(expectedHeight) {
-}
-
-ValidationResult LayoutValidator::validate(const VirtualRgbBoard& board) const {
-  ValidationResult result;
-
-  if (board.width != expectedWidth || board.height != expectedHeight) {
-    result.addError(ValidationError(
-      ValidationErrorType::InvalidBoardSize,
-      "Board dimensions do not match firmware dimensions",
-      "",
-      "",
-      -1,
-      -1
-    ));
-  }
-
-  validateLayoutIds(board, result);
-  validateDefaultLayout(board, result);
-
-  for (const Layout& layout : board.layouts) {
-    validateLayoutCoverage(board, layout, result);
-  }
-
-  return result;
-}
-
-void LayoutValidator::validateLayoutIds(
+void validateLayoutIds(
   const VirtualRgbBoard& board,
   ValidationResult& result
-) const {
+) {
   for (size_t i = 0; i < board.layouts.size(); i++) {
     for (size_t j = i + 1; j < board.layouts.size(); j++) {
       if (sameId(board.layouts[i].id, board.layouts[j].id)) {
@@ -86,10 +29,10 @@ void LayoutValidator::validateLayoutIds(
   }
 }
 
-void LayoutValidator::validateDefaultLayout(
+void validateDefaultLayout(
   const VirtualRgbBoard& board,
   ValidationResult& result
-) const {
+) {
   for (const Layout& layout : board.layouts) {
     if (sameId(layout.id, board.defaultLayoutId)) {
       return;
@@ -106,11 +49,11 @@ void LayoutValidator::validateDefaultLayout(
   ));
 }
 
-void LayoutValidator::validateLayoutCoverage(
+void validateLayoutCoverage(
   const VirtualRgbBoard& board,
   const Layout& layout,
   ValidationResult& result
-) const {
+) {
   if (board.width <= 0 || board.height <= 0) {
     return;
   }
@@ -199,52 +142,33 @@ void LayoutValidator::validateLayoutCoverage(
     }
   }
 }
-
-ValidationResult VirtualRgbBoard::validate(const LayoutValidator& validator) const {
-  return validator.validate(*this);
 }
 
-VirtualRgbBoard createDefaultVirtualRgbBoard() {
-  return {
-    128,
-    64,
-    "game_day",
-    {
-      {
-        "game_day",
-        "Game Day",
-        {
-          {"primary", DisplayRole::Primary, {0, 0, 128, 40}},
-          {"secondary_1", DisplayRole::Secondary, {0, 40, 32, 16}},
-          {"secondary_2", DisplayRole::Secondary, {32, 40, 32, 16}},
-          {"secondary_3", DisplayRole::Secondary, {64, 40, 32, 16}},
-          {"secondary_4", DisplayRole::Secondary, {96, 40, 32, 16}},
-          {"ticker", DisplayRole::Ticker, {0, 56, 128, 8}}
-        }
-      }
-    }
-  };
+LayoutValidator::LayoutValidator(int expectedWidth, int expectedHeight)
+  : expectedWidth(expectedWidth),
+    expectedHeight(expectedHeight) {
 }
 
-const char* validationErrorTypeName(ValidationErrorType type) {
-  switch (type) {
-    case ValidationErrorType::InvalidBoardSize:
-      return "InvalidBoardSize";
-    case ValidationErrorType::MissingDefaultLayout:
-      return "MissingDefaultLayout";
-    case ValidationErrorType::DuplicateLayoutId:
-      return "DuplicateLayoutId";
-    case ValidationErrorType::DuplicateDisplayId:
-      return "DuplicateDisplayId";
-    case ValidationErrorType::InvalidDisplaySize:
-      return "InvalidDisplaySize";
-    case ValidationErrorType::DisplayOutOfBounds:
-      return "DisplayOutOfBounds";
-    case ValidationErrorType::UnmappedVirtualPixel:
-      return "UnmappedVirtualPixel";
-    case ValidationErrorType::OverlappingDisplayPixel:
-      return "OverlappingDisplayPixel";
-    default:
-      return "Unknown";
+ValidationResult LayoutValidator::validate(const VirtualRgbBoard& board) const {
+  ValidationResult result;
+
+  if (board.width != expectedWidth || board.height != expectedHeight) {
+    result.addError(ValidationError(
+      ValidationErrorType::InvalidBoardSize,
+      "Board dimensions do not match firmware dimensions",
+      "",
+      "",
+      -1,
+      -1
+    ));
   }
+
+  validateLayoutIds(board, result);
+  validateDefaultLayout(board, result);
+
+  for (const Layout& layout : board.layouts) {
+    validateLayoutCoverage(board, layout, result);
+  }
+
+  return result;
 }
