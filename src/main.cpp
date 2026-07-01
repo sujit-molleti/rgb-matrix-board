@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 #include <ArduinoJson.h>
+#include "layout/layout.h"
 
 #define MATRIX_PIN 2
 #define ROWS 64
@@ -142,10 +143,50 @@ void renderJson(const char* json) {
   drawScoreboard(doc["game"].as<JsonObject>());
 }
 
+void printValidationResult(const ValidationResult& result) {
+  if (result.isValid) {
+    Serial.println("Layout validation passed.");
+    return;
+  }
+
+  Serial.println("Layout validation failed:");
+
+  for (const ValidationError& error : result.errors) {
+    Serial.print("- ");
+    Serial.print(validationErrorTypeName(error.type));
+    Serial.print(": ");
+    Serial.print(error.message.c_str());
+
+    if (!error.layoutId.empty()) {
+      Serial.print(" layout=");
+      Serial.print(error.layoutId.c_str());
+    }
+
+    if (!error.displayId.empty()) {
+      Serial.print(" display=");
+      Serial.print(error.displayId.c_str());
+    }
+
+    if (error.x >= 0 && error.y >= 0) {
+      Serial.print(" x=");
+      Serial.print(error.x);
+      Serial.print(" y=");
+      Serial.print(error.y);
+    }
+
+    Serial.println();
+  }
+}
+
 void setup() {
   Serial.begin(115200);
   matrix.begin();
   matrix.setBrightness(200);
+
+  LayoutRenderer layoutRenderer(COLS, ROWS);
+  LayoutValidator validator(COLS, ROWS);
+  ValidationResult validation = layoutRenderer.validate(validator);
+  printValidationResult(validation);
 
   Serial.println("Rendering fake scoreboard JSON...");
   renderJson(fakeJson);
