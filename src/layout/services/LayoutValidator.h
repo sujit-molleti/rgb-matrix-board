@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../models/ValidationResult.h"
+#include "validation/ValidationResult.h"
 
 struct VirtualRgbBoard;
 

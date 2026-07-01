@@ -2,7 +2,7 @@
 
 #include "../models/LEDPixel.h"
 #include "../models/LEDPixelBuffer.h"
-#include "../models/ValidationResult.h"
+#include "validation/ValidationResult.h"
 
 class LayoutValidator;
 
