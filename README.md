@@ -203,6 +203,29 @@ Ticker           128 x 8
 
 Display Zones simply provide rectangular bounds to Content Views.
 
+Retriving Pixel Information, given the row and column
+
+Pixel information is stored in the LEDPixelBuffer, which is one contiguous array of LEDPixel structs. Getting a pixel follows the formula:
+
+`[(displayYOrigin + r) * # of columns + (displayXOrigin + c)]`
+
+Rendering each pixel on the board:
+
+```
+for r in range (board.length):
+    for c in range (board.width):
+        ledPixelBuffer[(r * boardWidth) + c].
+```
+
+Rendering each Display (Primary, Secondary...Ticker) would require iterating through the boards displays:
+
+```
+for display in board.displays:
+    for r in range (display.length):
+        for c in range (display.width):
+            ledPixelBuffer[((display.y + r) * boardWidth) + display.x + c]
+```
+
 ## Domain Model
 
 The root content model direction is:
