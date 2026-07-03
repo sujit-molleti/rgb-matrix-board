@@ -27,6 +27,26 @@ VirtualRgbBoard createDefaultBoard(int boardWidth, int boardHeight) {
     }
   };
 }
+
+const Layout* findDefaultLayout(const VirtualRgbBoard& board) {
+  for (const Layout& layout : board.layouts) {
+    if (layout.id == board.defaultLayoutId) {
+      return &layout;
+    }
+  }
+
+  return nullptr;
+}
+
+const Display* findDisplayById(const Layout& layout, const char* displayId) {
+  for (const Display& display : layout.displays) {
+    if (display.id == displayId) {
+      return &display;
+    }
+  }
+
+  return nullptr;
+}
 }
 
 LayoutRenderer::LayoutRenderer(int boardWidth, int boardHeight)
@@ -41,6 +61,35 @@ void LayoutRenderer::clear(LEDPixel pixel) {
 
 void LayoutRenderer::setPixel(int x, int y, LEDPixel pixel) {
   pixelBuffer.setPixel(x, y, pixel);
+}
+
+void LayoutRenderer::renderDisplay(
+  const char* displayId,
+  const DisplayLEDPixelBuffer& displayBuffer
+) {
+  VirtualRgbBoard board = createDefaultBoard(boardWidth, boardHeight);
+  const Layout* layout = findDefaultLayout(board);
+
+  if (layout == nullptr) {
+    return;
+  }
+
+  const Display* display = findDisplayById(*layout, displayId);
+
+  if (display == nullptr ||
+      displayBuffer.getWidth() != display->bounds.width ||
+      displayBuffer.getHeight() != display->bounds.height) {
+    return;
+  }
+
+  for (int y = 0; y < display->bounds.height; y++) {
+    for (int x = 0; x < display->bounds.width; x++) {
+      const int globalX = display->bounds.x + x;
+      const int globalY = display->bounds.y + y;
+
+      pixelBuffer.setPixel(globalX, globalY, displayBuffer.getPixel(x, y));
+    }
+  }
 }
 
 LEDPixel LayoutRenderer::pixelAt(int x, int y) const {

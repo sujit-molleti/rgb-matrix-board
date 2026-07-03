@@ -4,9 +4,9 @@
 
 #include "LEDPixel.h"
 
-class LEDPixelBuffer {
+class GlobalLEDPixelBuffer {
 public:
-  LEDPixelBuffer(int width, int height);
+  GlobalLEDPixelBuffer(int width, int height);
 
   void clear(LEDPixel pixel = {0, 0, 0});
   void setPixel(int x, int y, LEDPixel pixel);
