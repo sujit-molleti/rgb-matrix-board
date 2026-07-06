@@ -5,6 +5,7 @@
 
 namespace {
 const char* DefaultLayoutId = "game_day";
+const LEDPixel White = {255, 255, 255};
 
 VirtualRgbBoard createDefaultBoard(int boardWidth, int boardHeight) {
   return {
@@ -59,6 +60,20 @@ void LayoutRenderer::clear(LEDPixel pixel) {
   pixelBuffer.clear(pixel);
 }
 
+void LayoutRenderer::renderDisplayBorders() {
+  VirtualRgbBoard board = createDefaultBoard(boardWidth, boardHeight);
+  const Layout* layout = findDefaultLayout(board);
+
+  if (layout == nullptr) {
+    return;
+  }
+
+  for (const Display& display : layout->displays) {
+    DisplayLEDPixelBuffer displayBuffer = displayLEDPixelBufferFor(display);
+    renderDisplay(display.id.c_str(), displayBuffer);
+  }
+}
+
 void LayoutRenderer::setPixel(int x, int y, LEDPixel pixel) {
   pixelBuffer.setPixel(x, y, pixel);
 }
@@ -99,4 +114,29 @@ LEDPixel LayoutRenderer::pixelAt(int x, int y) const {
 ValidationResult LayoutRenderer::validate(const LayoutValidator& validator) const {
   VirtualRgbBoard board = createDefaultBoard(boardWidth, boardHeight);
   return validator.validate(board);
+}
+
+DisplayLEDPixelBuffer LayoutRenderer::displayLEDPixelBufferFor(
+  const Display& display
+) const {
+  DisplayLEDPixelBuffer displayBuffer(
+    display.bounds.width,
+    display.bounds.height
+  );
+
+  for (int y = 0; y < display.bounds.height; y++) {
+    for (int x = 0; x < display.bounds.width; x++) {
+      const bool isBorder =
+        x == 0 ||
+        y == 0 ||
+        x == display.bounds.width - 1 ||
+        y == display.bounds.height - 1;
+
+      if (isBorder) {
+        displayBuffer.setPixel(x, y, White);
+      }
+    }
+  }
+
+  return displayBuffer;
 }

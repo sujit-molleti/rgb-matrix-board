@@ -6,12 +6,14 @@
 #include "validation/ValidationResult.h"
 
 class LayoutValidator;
+struct Display;
 
 class LayoutRenderer {
 public:
   LayoutRenderer(int boardWidth, int boardHeight);
 
   void clear(LEDPixel pixel = {0, 0, 0});
+  void renderDisplayBorders();
   void setPixel(int x, int y, LEDPixel pixel);
   void renderDisplay(const char* displayId, const DisplayLEDPixelBuffer& displayBuffer);
   LEDPixel pixelAt(int x, int y) const;
@@ -21,4 +23,6 @@ private:
   int boardWidth;
   int boardHeight;
   GlobalLEDPixelBuffer pixelBuffer;
+
+  DisplayLEDPixelBuffer displayLEDPixelBufferFor(const Display& display) const;
 };

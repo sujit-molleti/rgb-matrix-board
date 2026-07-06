@@ -143,6 +143,22 @@ void renderJson(const char* json) {
   drawScoreboard(doc["game"].as<JsonObject>());
 }
 
+uint32_t ledPixelColor(const LEDPixel& pixel) {
+  return matrix.Color(pixel.red, pixel.green, pixel.blue);
+}
+
+void renderLayoutRenderer(LayoutRenderer& layoutRenderer) {
+  matrix.clear();
+
+  for (int y = 0; y < ROWS; y++) {
+    for (int x = 0; x < COLS; x++) {
+      setPixel(x, y, ledPixelColor(layoutRenderer.pixelAt(x, y)));
+    }
+  }
+
+  matrix.show();
+}
+
 void printValidationResult(const ValidationResult& result) {
   if (result.isValid) {
     Serial.println("Layout validation passed.");
@@ -188,8 +204,9 @@ void setup() {
   ValidationResult validation = layoutRenderer.validate(validator);
   printValidationResult(validation);
 
-  Serial.println("Rendering fake scoreboard JSON...");
-  renderJson(fakeJson);
+  Serial.println("Rendering layout display borders...");
+  layoutRenderer.renderDisplayBorders();
+  renderLayoutRenderer(layoutRenderer);
 }
 
 void loop() {
