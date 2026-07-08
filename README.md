@@ -53,7 +53,7 @@ PlatformIO installs the project dependencies declared in `platformio.ini`:
 
 - `adafruit/Adafruit NeoPixel`
 - `bblanchon/ArduinoJson`
-
+- `adafruit/Adafruit GFX Library`
 ## Running The Project
 
 Build the firmware:
@@ -140,36 +140,6 @@ Renderer
 
 The domain model represents what the data is. The rendering layer determines how that data is displayed.
 
-### Prefer Composition For Domain Models
-
-The sports data layer should use composition instead of a data-only inheritance hierarchy. Shared fields should live in metadata objects owned by concrete domain models.
-
-Example direction:
-
-```cpp
-struct ContentMetadata {
-    std::string id;
-    Provider provider;
-    std::string providerId;
-
-    Sport sport;
-    std::optional<League> league;
-
-    std::chrono::system_clock::time_point fetchedAt;
-};
-
-struct Event {
-    ContentMetadata metadata;
-
-    std::string title;
-    EventStatus status;
-    std::vector<Competitor> competitors;
-
-    std::optional<std::string> location;
-    std::chrono::system_clock::time_point scheduledAt;
-};
-```
-
 ### Display Zones Are Layout Containers
 
 Display Zones define where content is rendered. They do not define how content should look, and they should remain unaware of the content they contain.
@@ -225,111 +195,6 @@ for display in board.displays:
         for c in range (display.width):
             ledPixelBuffer[((display.y + r) * boardWidth) + display.x + c]
 ```
-
-## Domain Model
-
-The root content model direction is:
-
-```text
-ContentModel
-├── Event
-├── Standing
-└── NewsAlert
-```
-
-The domain model represents information that exists within the sports domain. It should remain independent from rendering.
-
-## Event
-
-An Event represents a scheduled, live, or completed sports competition.
-
-Examples:
-
-- NFL game.
-- NBA game.
-- MLB game.
-- Tennis match.
-- Golf tournament.
-- Formula 1 race.
-
-Current planned fields:
-
-- `id`
-- `provider`
-- `providerId`
-- `sport`
-- `league`
-- `state`
-- `title`
-- `competitors`
-- `location`
-- `scheduledAt`
-- `fetchedAt`
-- `statusText`
-
-## Competitor
-
-A Competitor represents an entity participating in an Event.
-
-Current planned fields:
-
-- `id`
-- `type`
-- `displayName`
-- `abbreviation`
-- `country`
-- `affiliation`
-- `stats`
-- `score`
-
-Examples:
-
-```text
-NFL
-displayName = New York Jets
-record = 10-7
-score = 24
-
-Tennis
-displayName = Carlos Alcaraz
-country = ESP
-rank = 2
-score = 6-4 3-2
-
-Golf
-displayName = Scottie Scheffler
-country = USA
-rank = 1
-score = -8
-
-Formula 1
-displayName = Max Verstappen
-country = NED
-affiliation = Red Bull
-score = P1
-```
-
-## Standing
-
-A Standing represents standings, rankings, or tables.
-
-Examples:
-
-- AFC East standings.
-- NBA Eastern Conference.
-- ATP rankings.
-- Formula 1 Constructors Championship.
-
-## NewsAlert
-
-A NewsAlert represents informational sports content.
-
-Examples:
-
-- Trade news.
-- Injury reports.
-- Breaking news.
-- Roster moves.
 
 ## Rendering Pipeline
 
