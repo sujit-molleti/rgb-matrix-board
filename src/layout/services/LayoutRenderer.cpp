@@ -1,5 +1,6 @@
 #include "LayoutRenderer.h"
 
+#include "DisplayContentDrawer.h"
 #include "LayoutValidator.h"
 #include "../internal/layout_private.h"
 
@@ -70,6 +71,8 @@ void LayoutRenderer::renderDisplayBorders() {
 
   for (const Display& display : layout->displays) {
     DisplayLEDPixelBuffer displayBuffer = displayLEDPixelBufferFor(display);
+    DisplayContentDrawer drawer(displayBuffer);
+    drawer.drawText(2, 2, "Hello", White);
     renderDisplay(display.id.c_str(), displayBuffer);
   }
 }
