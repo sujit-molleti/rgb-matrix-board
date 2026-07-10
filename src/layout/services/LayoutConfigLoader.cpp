@@ -18,6 +18,10 @@ DisplayRole displayRoleFromString(const char* role) {
     return DisplayRole::Secondary;
   }
 
+  if (roleString == "header") {
+    return DisplayRole::Header;
+  }
+
   if (roleString == "ticker") {
     return DisplayRole::Ticker;
   }

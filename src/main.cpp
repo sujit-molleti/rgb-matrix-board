@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 #include <ArduinoJson.h>
+#include "layout/config/settings.h"
 #include "layout/layout.h"
 
 #define MATRIX_PIN 2
@@ -200,6 +201,13 @@ void setup() {
   matrix.setBrightness(200);
 
   LayoutRenderer layoutRenderer(COLS, ROWS);
+
+  if (!layoutRenderer.setActiveLayout(layout_settings::ActiveLayoutId)) {
+    Serial.println(
+      "Failed to activate " + String(layout_settings::ActiveLayoutId) + " layout."
+    );
+  }
+
   LayoutValidator validator(COLS, ROWS);
   ValidationResult validation = layoutRenderer.validate(validator);
   printValidationResult(validation);

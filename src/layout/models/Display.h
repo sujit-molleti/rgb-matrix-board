@@ -7,6 +7,7 @@
 enum class DisplayRole {
   Primary,
   Secondary,
+  Header,
   Ticker,
   Unknown
 };

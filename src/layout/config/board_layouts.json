@@ -38,6 +38,47 @@
           "bounds": { "x": 0, "y": 56, "width": 128, "height": 8 }
         }
       ]
+    },
+    {
+      "id": "game_day_header",
+      "name": "Game Day Header",
+      "displays": [
+        {
+          "id": "primary",
+          "role": "primary",
+          "bounds": { "x": 0, "y": 0, "width": 128, "height": 30 }
+        },
+        {
+          "id": "static_header",
+          "role": "header",
+          "bounds": { "x": 0, "y": 30, "width": 128, "height": 10 }
+        },
+        {
+          "id": "secondary_1",
+          "role": "secondary",
+          "bounds": { "x": 0, "y": 40, "width": 32, "height": 16 }
+        },
+        {
+          "id": "secondary_2",
+          "role": "secondary",
+          "bounds": { "x": 32, "y": 40, "width": 32, "height": 16 }
+        },
+        {
+          "id": "secondary_3",
+          "role": "secondary",
+          "bounds": { "x": 64, "y": 40, "width": 32, "height": 16 }
+        },
+        {
+          "id": "secondary_4",
+          "role": "secondary",
+          "bounds": { "x": 96, "y": 40, "width": 32, "height": 16 }
+        },
+        {
+          "id": "ticker",
+          "role": "ticker",
+          "bounds": { "x": 0, "y": 56, "width": 128, "height": 8 }
+        }
+      ]
     }
   ]
 }
