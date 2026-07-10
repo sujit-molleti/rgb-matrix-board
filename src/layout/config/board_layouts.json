@@ -1,0 +1,43 @@
+{
+  "width": 128,
+  "height": 64,
+  "defaultLayoutId": "game_day",
+  "layouts": [
+    {
+      "id": "game_day",
+      "name": "Game Day",
+      "displays": [
+        {
+          "id": "primary",
+          "role": "primary",
+          "bounds": { "x": 0, "y": 0, "width": 128, "height": 40 }
+        },
+        {
+          "id": "secondary_1",
+          "role": "secondary",
+          "bounds": { "x": 0, "y": 40, "width": 32, "height": 16 }
+        },
+        {
+          "id": "secondary_2",
+          "role": "secondary",
+          "bounds": { "x": 32, "y": 40, "width": 32, "height": 16 }
+        },
+        {
+          "id": "secondary_3",
+          "role": "secondary",
+          "bounds": { "x": 64, "y": 40, "width": 32, "height": 16 }
+        },
+        {
+          "id": "secondary_4",
+          "role": "secondary",
+          "bounds": { "x": 96, "y": 40, "width": 32, "height": 16 }
+        },
+        {
+          "id": "ticker",
+          "role": "ticker",
+          "bounds": { "x": 0, "y": 56, "width": 128, "height": 8 }
+        }
+      ]
+    }
+  ]
+}

@@ -3,6 +3,7 @@
 #include "../models/DisplayLEDPixelBuffer.h"
 #include "../models/GlobalLEDPixelBuffer.h"
 #include "../models/LEDPixel.h"
+#include "../models/VirtualRgbBoard.h"
 #include "validation/ValidationResult.h"
 
 class LayoutValidator;
@@ -16,13 +17,16 @@ public:
   void renderDisplayBorders();
   void setPixel(int x, int y, LEDPixel pixel);
   void renderDisplay(const char* displayId, const DisplayLEDPixelBuffer& displayBuffer);
+  bool setActiveLayout(const char* layoutId);
+  const char* activeLayoutId() const;
   LEDPixel pixelAt(int x, int y) const;
   ValidationResult validate(const LayoutValidator& validator) const;
 
 private:
-  int boardWidth;
-  int boardHeight;
+  VirtualRgbBoard board;
+  std::string currentLayoutId;
   GlobalLEDPixelBuffer pixelBuffer;
 
+  const Layout* activeLayout() const;
   DisplayLEDPixelBuffer displayLEDPixelBufferFor(const Display& display) const;
 };

@@ -6,8 +6,8 @@
 #include "Layout.h"
 
 struct VirtualRgbBoard {
-  int width;
-  int height;
+  int width = 0;
+  int height = 0;
   std::string defaultLayoutId;
   std::vector<Layout> layouts;
 };

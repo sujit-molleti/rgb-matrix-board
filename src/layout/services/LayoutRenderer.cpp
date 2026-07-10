@@ -1,38 +1,17 @@
 #include "LayoutRenderer.h"
 
 #include "DisplayContentDrawer.h"
+#include "LayoutConfigLoader.h"
 #include "LayoutValidator.h"
 #include "../internal/layout_private.h"
+#include <generated/LayoutConfigJson.h>
 
 namespace {
-const char* DefaultLayoutId = "game_day";
 const LEDPixel White = {255, 255, 255};
 
-VirtualRgbBoard createDefaultBoard(int boardWidth, int boardHeight) {
-  return {
-    boardWidth,
-    boardHeight,
-    DefaultLayoutId,
-    {
-      {
-        DefaultLayoutId,
-        "Game Day",
-        {
-          {"primary", DisplayRole::Primary, {0, 0, 128, 40}},
-          {"secondary_1", DisplayRole::Secondary, {0, 40, 32, 16}},
-          {"secondary_2", DisplayRole::Secondary, {32, 40, 32, 16}},
-          {"secondary_3", DisplayRole::Secondary, {64, 40, 32, 16}},
-          {"secondary_4", DisplayRole::Secondary, {96, 40, 32, 16}},
-          {"ticker", DisplayRole::Ticker, {0, 56, 128, 8}}
-        }
-      }
-    }
-  };
-}
-
-const Layout* findDefaultLayout(const VirtualRgbBoard& board) {
+const Layout* findLayoutById(const VirtualRgbBoard& board, const std::string& layoutId) {
   for (const Layout& layout : board.layouts) {
-    if (layout.id == board.defaultLayoutId) {
+    if (layout.id == layoutId) {
       return &layout;
     }
   }
@@ -52,8 +31,8 @@ const Display* findDisplayById(const Layout& layout, const char* displayId) {
 }
 
 LayoutRenderer::LayoutRenderer(int boardWidth, int boardHeight)
-  : boardWidth(boardWidth),
-    boardHeight(boardHeight),
+  : board(LayoutConfigLoader().load(layout_config::kBoardLayoutsJson)),
+    currentLayoutId(board.defaultLayoutId),
     pixelBuffer(boardWidth, boardHeight) {
 }
 
@@ -62,8 +41,7 @@ void LayoutRenderer::clear(LEDPixel pixel) {
 }
 
 void LayoutRenderer::renderDisplayBorders() {
-  VirtualRgbBoard board = createDefaultBoard(boardWidth, boardHeight);
-  const Layout* layout = findDefaultLayout(board);
+  const Layout* layout = activeLayout();
 
   if (layout == nullptr) {
     return;
@@ -85,8 +63,7 @@ void LayoutRenderer::renderDisplay(
   const char* displayId,
   const DisplayLEDPixelBuffer& displayBuffer
 ) {
-  VirtualRgbBoard board = createDefaultBoard(boardWidth, boardHeight);
-  const Layout* layout = findDefaultLayout(board);
+  const Layout* layout = activeLayout();
 
   if (layout == nullptr) {
     return;
@@ -110,13 +87,35 @@ void LayoutRenderer::renderDisplay(
   }
 }
 
+bool LayoutRenderer::setActiveLayout(const char* layoutId) {
+  if (layoutId == nullptr) {
+    return false;
+  }
+
+  const Layout* layout = findLayoutById(board, layoutId);
+
+  if (layout == nullptr) {
+    return false;
+  }
+
+  currentLayoutId = layout->id;
+  return true;
+}
+
+const char* LayoutRenderer::activeLayoutId() const {
+  return currentLayoutId.c_str();
+}
+
 LEDPixel LayoutRenderer::pixelAt(int x, int y) const {
   return pixelBuffer.getPixel(x, y);
 }
 
 ValidationResult LayoutRenderer::validate(const LayoutValidator& validator) const {
-  VirtualRgbBoard board = createDefaultBoard(boardWidth, boardHeight);
   return validator.validate(board);
+}
+
+const Layout* LayoutRenderer::activeLayout() const {
+  return findLayoutById(board, currentLayoutId);
 }
 
 DisplayLEDPixelBuffer LayoutRenderer::displayLEDPixelBufferFor(
