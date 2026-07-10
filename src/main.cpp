@@ -1,3 +1,5 @@
+#ifndef PIO_UNIT_TESTING
+
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 #include <ArduinoJson.h>
@@ -220,3 +222,5 @@ void setup() {
 void loop() {
   delay(1000);
 }
+
+#endif

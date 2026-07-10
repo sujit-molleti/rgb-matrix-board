@@ -76,6 +76,55 @@ pio device monitor
 
 The project can also be run in Wokwi using the included `diagram.json` and `wokwi.toml` files.
 
+## Running Tests
+
+Tests are PlatformIO Unity suites stored under the root `test/` directory.
+
+List the available test suites:
+
+```sh
+pio test --list-tests
+```
+
+Run all tests:
+
+```sh
+pio test
+```
+
+Compile all tests without uploading to an ESP32:
+
+```sh
+pio test --without-uploading --without-testing
+```
+
+`--without-uploading` builds the test firmware but does not flash it to a connected board.
+`--without-testing` skips the serial test-run phase that waits for output from the board.
+Use both flags together when you only want to confirm that the test suites compile and link.
+
+Run one component test suite:
+
+```sh
+pio test -f test_pixel_buffer
+```
+
+Compile one component test suite without uploading to an ESP32:
+
+```sh
+pio test -f test_pixel_buffer --without-uploading --without-testing
+```
+
+Available component test suites:
+
+| Component | Suite | Run on board | Compile only |
+| --- | --- | --- | --- |
+| Pixel buffers | `test_pixel_buffer` | `pio test -f test_pixel_buffer` | `pio test -f test_pixel_buffer --without-uploading --without-testing` |
+| Layout config loading | `test_layout_config_loader` | `pio test -f test_layout_config_loader` | `pio test -f test_layout_config_loader --without-uploading --without-testing` |
+| Layout validation | `test_validation` | `pio test -f test_validation` | `pio test -f test_validation --without-uploading --without-testing` |
+| Layout renderer | `test_layout_renderer` | `pio test -f test_layout_renderer` | `pio test -f test_layout_renderer --without-uploading --without-testing` |
+
+Current suites cover layout validation, layout config loading, pixel buffers, and layout renderer behavior.
+
 ## High-Level Architecture
 
 ```text
