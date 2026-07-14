@@ -12,7 +12,6 @@ This repository is an early prototype. It currently supports:
 - 64 row x 128 column Wokwi LED matrix simulation.
 - Serpentine pixel mapping.
 - JSON parsing with ArduinoJson.
-- A hardcoded sample football scoreboard.
 
 The project is being shaped toward a general sports display system that can render live events, upcoming games, completed results, secondary score tiles, standings, news alerts, and ticker content.
 
