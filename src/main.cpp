@@ -13,20 +13,6 @@
 
 Adafruit_NeoPixel matrix(NUM_PIXELS, MATRIX_PIN, NEO_GRB + NEO_KHZ800);
 
-const char* fakeJson = R"json(
-{
-  "game": {
-    "awayTeam": "JETS",
-    "awayScore": 24,
-    "homeTeam": "PATS",
-    "homeScore": 16,
-    "quarter": 4,
-    "clock": "1:29",
-    "possession": "JETS"
-  }
-}
-)json";
-
 uint32_t green = matrix.Color(0, 180, 80);
 uint32_t red = matrix.Color(220, 20, 30);
 uint32_t white = matrix.Color(220, 220, 220);
