@@ -50,7 +50,7 @@ void LayoutRenderer::renderDisplayBorders() {
   for (const Display& display : layout->displays) {
     DisplayLEDPixelBuffer displayBuffer = displayLEDPixelBufferFor(display);
     DisplayContentDrawer drawer(displayBuffer);
-    drawer.drawText(2, 2, "Hello", White);
+    drawer.drawText(2, 2, "Sports", White);
     renderDisplay(display.id.c_str(), displayBuffer);
   }
 }
