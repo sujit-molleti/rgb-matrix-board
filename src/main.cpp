@@ -2,7 +2,6 @@
 
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
-#include "layout/config/settings.h"
 #include "layout/layout.h"
 
 #define MATRIX_PIN 2
@@ -11,6 +10,11 @@
 #define NUM_PIXELS (ROWS * COLS)
 
 Adafruit_NeoPixel matrix(NUM_PIXELS, MATRIX_PIN, NEO_GRB + NEO_KHZ800);
+
+BoardCoordinator& boardCoordinator() {
+  static BoardCoordinator coordinator(COLS, ROWS);
+  return coordinator;
+}
 
 int pixelIndex(int x, int y) {
   if (y % 2 == 0) {
@@ -32,7 +36,7 @@ uint32_t ledPixelColor(const LEDPixel& pixel) {
   return matrix.Color(pixel.red, pixel.green, pixel.blue);
 }
 
-void renderLayoutRenderer(LayoutRenderer& layoutRenderer) {
+void renderLayoutRenderer(const LayoutRenderer& layoutRenderer) {
   matrix.clear();
 
   for (int y = 0; y < ROWS; y++) {
@@ -84,25 +88,28 @@ void setup() {
   matrix.begin();
   matrix.setBrightness(200);
 
-  LayoutRenderer layoutRenderer(COLS, ROWS);
-
-  if (!layoutRenderer.setActiveLayout(layout_settings::ActiveLayoutId)) {
-    Serial.println(
-      "Failed to activate " + String(layout_settings::ActiveLayoutId) + " layout."
-    );
-  }
+  BoardCoordinator& coordinator = boardCoordinator();
+  coordinator.begin(millis());
 
   LayoutValidator validator(COLS, ROWS);
-  ValidationResult validation = layoutRenderer.validate(validator);
+  ValidationResult validation = coordinator.renderer().validate(validator);
   printValidationResult(validation);
 
   Serial.println("Rendering layout display borders...");
-  layoutRenderer.renderDisplayBorders();
-  renderLayoutRenderer(layoutRenderer);
+  renderLayoutRenderer(coordinator.renderer());
 }
 
 void loop() {
-  delay(1000);
+  BoardCoordinator& coordinator = boardCoordinator();
+
+  if (coordinator.tick(millis())) {
+    Serial.println(
+      "Switched to " + String(coordinator.renderer().activeLayoutId()) + " layout."
+    );
+    renderLayoutRenderer(coordinator.renderer());
+  }
+
+  delay(50);
 }
 
 #endif

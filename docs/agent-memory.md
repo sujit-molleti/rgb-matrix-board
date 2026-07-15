@@ -30,7 +30,8 @@ context for Codex-assisted maintenance of `rgb-matrix-board`.
 4. Run the full available local check suite.
 5. Commit the code changes and any relevant memory updates.
 6. Push the branch.
-7. Open a GitHub PR with the summary and check results.
+7. Open a GitHub PR with `gh pr create`, including the summary and check
+   results.
 
 ## Current Setup State
 
@@ -39,10 +40,9 @@ context for Codex-assisted maintenance of `rgb-matrix-board`.
   GitHub SSH key for the repository.
 - HTTPS clone succeeded.
 - GitHub CLI (`gh`) and PlatformIO were installed during setup.
-- `gh` still requires GitHub authentication before this environment can create
-  pull requests.
-- HTTPS push to GitHub also requires credentials; the setup branch currently
-  exists locally until authentication is configured.
+- `gh` is authenticated and should be used to create pull requests after coding
+  task branches are pushed.
+- HTTPS push to GitHub is configured.
 
 ## Feedback Log
 
@@ -52,3 +52,5 @@ context for Codex-assisted maintenance of `rgb-matrix-board`.
 - Initial preference: commit this memory file with each PR so process memory is
   visible in review.
 - Initial preference: run the full available test suite before opening PRs.
+- Follow-up preference: after pushing coding task branches, create the PR with
+  `gh pr create` instead of stopping at the GitHub compare URL.
