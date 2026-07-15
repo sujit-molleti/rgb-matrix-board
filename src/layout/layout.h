@@ -3,6 +3,7 @@
 #include "models/DisplayLEDPixelBuffer.h"
 #include "models/GlobalLEDPixelBuffer.h"
 #include "models/LEDPixel.h"
+#include "services/BoardCoordinator.h"
 #include "services/DisplayContentDrawer.h"
 #include "services/LayoutConfigLoader.h"
 #include "services/LayoutRenderer.h"
